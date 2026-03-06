@@ -87,15 +87,18 @@ export function CartMain({layout, cart: originalCart}) {
 function CartEmpty({hidden = false}) {
   const {close} = useAside();
   return (
-    <div hidden={hidden}>
-      <br />
-      <p>
+    <div hidden={hidden} className="text-center py-8">
+      <p className="text-muted-foreground text-lg mb-4">
         Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
         started!
       </p>
-      <br />
-      <Link to="/collections" onClick={close} prefetch="viewport">
-        Continue shopping →
+      <Link
+        to="/collections"
+        onClick={close}
+        prefetch="viewport"
+        className="inline-block px-6 py-2.5 rounded-md bg-secondary text-secondary-foreground font-medium hover:bg-secondary/90 transition-colors"
+      >
+        Continue shopping
       </Link>
     </div>
   );

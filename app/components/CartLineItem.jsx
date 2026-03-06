@@ -24,20 +24,21 @@ export function CartLineItem({layout, line, childrenMap}) {
   const childrenLabelId = `cart-line-children-${id}`;
 
   return (
-    <li key={id} className="cart-line">
-      <div className="cart-line-inner">
+    <li key={id} className="py-4 border-b border-border last:border-b-0">
+      <div className="flex gap-4">
         {image && (
           <Image
             alt={title}
             aspectRatio="1/1"
             data={image}
-            height={100}
+            height={80}
             loading="lazy"
-            width={100}
+            width={80}
+            className="rounded-md border border-border"
           />
         )}
 
-        <div>
+        <div className="flex-1 min-w-0">
           <Link
             prefetch="intent"
             to={lineItemUrl}
@@ -46,16 +47,17 @@ export function CartLineItem({layout, line, childrenMap}) {
                 close();
               }
             }}
+            className="hover:text-primary transition-colors"
           >
-            <p>
-              <strong>{product.title}</strong>
-            </p>
+            <p className="font-semibold text-sm">{product.title}</p>
           </Link>
-          <ProductPrice price={line?.cost?.totalAmount} />
-          <ul>
+          <div className="mt-1">
+            <ProductPrice price={line?.cost?.totalAmount} />
+          </div>
+          <ul className="mt-1">
             {selectedOptions.map((option) => (
               <li key={option.name}>
-                <small>
+                <small className="text-muted-foreground">
                   {option.name}: {option.value}
                 </small>
               </li>
@@ -99,30 +101,30 @@ function CartLineQuantity({line}) {
   const nextQuantity = Number((quantity + 1).toFixed(0));
 
   return (
-    <div className="cart-line-quantity">
-      <small>Quantity: {quantity} &nbsp;&nbsp;</small>
+    <div className="flex items-center gap-2 mt-2">
       <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
         <button
           aria-label="Decrease quantity"
           disabled={quantity <= 1 || !!isOptimistic}
           name="decrease-quantity"
           value={prevQuantity}
+          className="w-7 h-7 rounded border border-border flex items-center justify-center text-sm hover:bg-muted transition-colors disabled:opacity-30"
         >
-          <span>&#8722; </span>
+          &#8722;
         </button>
       </CartLineUpdateButton>
-      &nbsp;
+      <span className="text-sm font-medium w-6 text-center">{quantity}</span>
       <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
         <button
           aria-label="Increase quantity"
           name="increase-quantity"
           value={nextQuantity}
           disabled={!!isOptimistic}
+          className="w-7 h-7 rounded border border-border flex items-center justify-center text-sm hover:bg-muted transition-colors disabled:opacity-30"
         >
-          <span>&#43;</span>
+          &#43;
         </button>
       </CartLineUpdateButton>
-      &nbsp;
       <CartLineRemoveButton lineIds={[lineId]} disabled={!!isOptimistic} />
     </div>
   );
@@ -145,7 +147,11 @@ function CartLineRemoveButton({lineIds, disabled}) {
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{lineIds}}
     >
-      <button disabled={disabled} type="submit">
+      <button
+        disabled={disabled}
+        type="submit"
+        className="text-xs text-muted-foreground hover:text-destructive transition-colors ml-2"
+      >
         Remove
       </button>
     </CartForm>

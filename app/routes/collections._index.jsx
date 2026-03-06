@@ -50,20 +50,36 @@ export default function Collections() {
   const {collections} = useLoaderData();
 
   return (
-    <div className="collections">
-      <h1>Collections</h1>
-      <PaginatedResourceSection
-        connection={collections}
-        resourcesClassName="collections-grid"
-      >
-        {({node: collection, index}) => (
-          <CollectionItem
-            key={collection.id}
-            collection={collection}
-            index={index}
-          />
-        )}
-      </PaginatedResourceSection>
+    <div>
+      <section className="bg-primary relative overflow-hidden py-16 md:py-24">
+        <div className="absolute inset-0 opacity-10" style={{background: 'radial-gradient(circle at 30% 50%, var(--secondary) 0%, transparent 60%)'}} />
+        <div className="relative max-w-6xl mx-auto px-4 text-center">
+          <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
+            Shop
+          </span>
+          <h1 className="text-3xl md:text-5xl font-bold text-primary-foreground mt-2 mb-4">
+            Our Collections
+          </h1>
+          <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
+            Discover our curated cookbook binders, each celebrating the best local restaurants in their region.
+          </p>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <PaginatedResourceSection
+          connection={collections}
+          resourcesClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {({node: collection, index}) => (
+            <CollectionItem
+              key={collection.id}
+              collection={collection}
+              index={index}
+            />
+          )}
+        </PaginatedResourceSection>
+      </section>
     </div>
   );
 }
@@ -77,21 +93,29 @@ export default function Collections() {
 function CollectionItem({collection, index}) {
   return (
     <Link
-      className="collection-item"
+      className="group block bg-card rounded-lg border border-border hover:shadow-md transition-shadow overflow-hidden"
       key={collection.id}
       to={`/collections/${collection.handle}`}
       prefetch="intent"
     >
+      <div className="h-2 bg-secondary rounded-t-lg" />
       {collection?.image && (
-        <Image
-          alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
-          data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
+        <div className="overflow-hidden">
+          <Image
+            alt={collection.image.altText || collection.title}
+            aspectRatio="1/1"
+            data={collection.image}
+            loading={index < 3 ? 'eager' : undefined}
+            sizes="(min-width: 45em) 400px, 100vw"
+            className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
       )}
-      <h5>{collection.title}</h5>
+      <div className="p-5">
+        <h5 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+          {collection.title}
+        </h5>
+      </div>
     </Link>
   );
 }

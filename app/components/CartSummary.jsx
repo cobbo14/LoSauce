@@ -11,10 +11,10 @@ export function CartSummary({cart, layout}) {
 
   return (
     <div aria-labelledby="cart-summary" className={className}>
-      <h4>Totals</h4>
-      <dl className="cart-subtotal">
-        <dt>Subtotal</dt>
-        <dd>
+      <h4 className="text-lg font-bold mb-3">Totals</h4>
+      <dl className="flex items-center justify-between text-sm">
+        <dt className="text-muted-foreground">Subtotal</dt>
+        <dd className="font-semibold text-base">
           {cart?.cost?.subtotalAmount?.amount ? (
             <Money data={cart?.cost?.subtotalAmount} />
           ) : (
@@ -36,11 +36,14 @@ function CartCheckoutActions({checkoutUrl}) {
   if (!checkoutUrl) return null;
 
   return (
-    <div>
-      <a href={checkoutUrl} target="_self">
-        <p>Continue to Checkout &rarr;</p>
+    <div className="mt-4">
+      <a
+        href={checkoutUrl}
+        target="_self"
+        className="block w-full text-center px-8 py-3 rounded-md bg-secondary text-secondary-foreground font-medium hover:bg-secondary/90 transition-colors"
+      >
+        Continue to Checkout &rarr;
       </a>
-      <br />
     </div>
   );
 }
@@ -85,9 +88,13 @@ function CartDiscounts({discountCodes}) {
             type="text"
             name="discountCode"
             placeholder="Discount code"
+            className="flex-1 px-3 py-1.5 rounded-md border border-input bg-card text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
-          &nbsp;
-          <button type="submit" aria-label="Apply discount code">
+          <button
+            type="submit"
+            aria-label="Apply discount code"
+            className="px-4 py-1.5 rounded-md border border-border text-sm font-medium hover:bg-muted transition-colors"
+          >
             Apply
           </button>
         </div>
@@ -157,9 +164,13 @@ function CartGiftCard({giftCardCodes}) {
             name="giftCardCode"
             placeholder="Gift card code"
             ref={giftCardCodeInput}
+            className="flex-1 px-3 py-1.5 rounded-md border border-input bg-card text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
-          &nbsp;
-          <button type="submit" disabled={giftCardAddFetcher.state !== 'idle'}>
+          <button
+            type="submit"
+            disabled={giftCardAddFetcher.state !== 'idle'}
+            className="px-4 py-1.5 rounded-md border border-border text-sm font-medium hover:bg-muted transition-colors disabled:opacity-50"
+          >
             Apply
           </button>
         </div>

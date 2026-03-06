@@ -7,7 +7,7 @@ import {ProductItem} from '~/components/ProductItem';
  * @type {Route.MetaFunction}
  */
 export const meta = () => {
-  return [{title: `Hydrogen | Products`}];
+  return [{title: `Locally Sauced | Shop All`}];
 };
 
 /**
@@ -58,20 +58,36 @@ export default function Collection() {
   const {products} = useLoaderData();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
-      <PaginatedResourceSection
-        connection={products}
-        resourcesClassName="products-grid"
-      >
-        {({node: product, index}) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            loading={index < 8 ? 'eager' : undefined}
-          />
-        )}
-      </PaginatedResourceSection>
+    <div>
+      <section className="bg-primary relative overflow-hidden py-16 md:py-24">
+        <div className="absolute inset-0 opacity-10" style={{background: 'radial-gradient(circle at 30% 50%, var(--secondary) 0%, transparent 60%)'}} />
+        <div className="relative max-w-6xl mx-auto px-4 text-center">
+          <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
+            Browse
+          </span>
+          <h1 className="text-3xl md:text-5xl font-bold text-primary-foreground mt-2 mb-4">
+            Shop All
+          </h1>
+          <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
+            Discover all Locally Sauced cookbook binders and editions.
+          </p>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <PaginatedResourceSection
+          connection={products}
+          resourcesClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {({node: product, index}) => (
+            <ProductItem
+              key={product.id}
+              product={product}
+              loading={index < 8 ? 'eager' : undefined}
+            />
+          )}
+        </PaginatedResourceSection>
+      </section>
     </div>
   );
 }

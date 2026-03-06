@@ -20,7 +20,13 @@ export function PaginatedResourceSection({
         return (
           <div>
             <PreviousLink>
-              {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
+              {isLoading ? (
+                <span className="text-muted-foreground">Loading...</span>
+              ) : (
+                <span className="inline-block mb-6 px-6 py-2.5 rounded-md border border-border text-sm font-medium hover:bg-muted transition-colors">
+                  Load previous
+                </span>
+              )}
             </PreviousLink>
             {resourcesClassName ? (
               <div className={resourcesClassName}>{resourcesMarkup}</div>
@@ -28,7 +34,13 @@ export function PaginatedResourceSection({
               resourcesMarkup
             )}
             <NextLink>
-              {isLoading ? 'Loading...' : <span>Load more ↓</span>}
+              {isLoading ? (
+                <span className="text-muted-foreground">Loading...</span>
+              ) : (
+                <span className="inline-block mt-6 px-6 py-2.5 rounded-md border border-border text-sm font-medium hover:bg-muted transition-colors">
+                  Load more
+                </span>
+              )}
             </NextLink>
           </div>
         );
