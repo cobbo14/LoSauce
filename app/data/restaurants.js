@@ -1,0 +1,88 @@
+export const restaurants = [
+  // SW London
+  {
+    id: 'the-ivy-kitchen',
+    name: 'The Ivy Kitchen',
+    regionId: 'sw-london',
+    cuisine: 'British',
+    description: 'A beloved neighbourhood bistro serving refined British classics with a seasonal, locally sourced menu.',
+    address: '12 High Street, Putney, London SW15',
+    featured: true,
+  },
+  {
+    id: 'casa-andalucia',
+    name: 'Casa Andalucía',
+    regionId: 'sw-london',
+    cuisine: 'Spanish',
+    description: 'Authentic Andalusian tapas and sherry in a warm, tiled dining room in Clapham.',
+    address: '34 Old Town, Clapham, London SW4',
+    featured: true,
+  },
+  {
+    id: 'the-richmond-larder',
+    name: 'The Richmond Larder',
+    regionId: 'sw-london',
+    cuisine: 'Modern European',
+    description: 'A farm-to-table restaurant celebrating the best of British produce with a modern European touch.',
+    address: '8 George Street, Richmond, Surrey TW9',
+    featured: false,
+  },
+
+  // Manchester
+  {
+    id: 'hawksmoor-manchester',
+    name: 'The Northern Plate',
+    regionId: 'manchester',
+    cuisine: 'British',
+    description: 'A proud Mancunian kitchen championing local farms and classic Northern recipes with a contemporary edge.',
+    address: '55 Tib Street, Northern Quarter, Manchester M4',
+    featured: true,
+  },
+  {
+    id: 'el-gato-negro',
+    name: 'Barrio Español',
+    regionId: 'manchester',
+    cuisine: 'Spanish',
+    description: 'Bold Spanish cooking, great wine, and a buzzing atmosphere in the heart of the city.',
+    address: '18 King Street, Manchester M2',
+    featured: false,
+  },
+  {
+    id: 'bundobust-mcr',
+    name: 'Bundobust',
+    regionId: 'manchester',
+    cuisine: 'Indian',
+    description: "Indian street food and craft beer — a match made in heaven in Manchester's Northern Quarter.",
+    address: '61 Piccadilly, Manchester M1',
+    featured: true,
+  },
+
+  // Bristol
+  {
+    id: 'casamia',
+    name: 'Clifton Kitchen',
+    regionId: 'bristol',
+    cuisine: 'Modern British',
+    description: 'A refined tasting-menu restaurant in Clifton celebrating British produce through a creative, seasonal lens.',
+    address: '3 Chandos Road, Clifton, Bristol BS6',
+    featured: true,
+  },
+  {
+    id: 'the-kensington-arms',
+    name: 'The Kensington Arms',
+    regionId: 'bristol',
+    cuisine: 'British Pub',
+    description: 'A classic Bristol boozer serving outstanding pub food — hearty, honest, and utterly delicious.',
+    address: '35 Stanley Road, Redland, Bristol BS6',
+    featured: false,
+  },
+  {
+    id: 'basque',
+    name: 'Basque',
+    regionId: 'bristol',
+    cuisine: 'Basque',
+    description: 'Pintxos, txakoli wine, and the spirit of San Sebastián brought to the streets of Bristol.',
+    address: '12 Whiteladies Road, Clifton, Bristol BS8',
+    featured: true,
+  },
+];

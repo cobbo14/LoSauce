@@ -1,130 +1,86 @@
-import {Suspense} from 'react';
-import {Await, NavLink} from 'react-router';
+import {NavLink} from 'react-router';
 
-/**
- * @param {FooterProps}
- */
 export function Footer({footer: footerPromise, header, publicStoreDomain}) {
   return (
-    <Suspense>
-      <Await resolve={footerPromise}>
-        {(footer) => (
-          <footer className="footer">
-            {footer?.menu && header.shop.primaryDomain?.url && (
-              <FooterMenu
-                menu={footer.menu}
-                primaryDomainUrl={header.shop.primaryDomain.url}
-                publicStoreDomain={publicStoreDomain}
-              />
-            )}
-          </footer>
-        )}
-      </Await>
-    </Suspense>
+    <footer className="bg-primary text-primary-foreground mt-auto">
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Brand */}
+          <div>
+            <h3 className="text-secondary font-bold text-lg tracking-wider uppercase mb-3">
+              Locally Sauced
+            </h3>
+            <p className="text-primary-foreground/70 text-sm leading-relaxed">
+              Celebrating the restaurants that make your neighbourhood delicious
+              — one recipe at a time.
+            </p>
+          </div>
+
+          {/* Links */}
+          <div>
+            <h4 className="font-semibold tracking-wide text-sm uppercase mb-3 text-secondary">
+              Explore
+            </h4>
+            <ul className="space-y-2 text-sm text-primary-foreground/70">
+              <li>
+                <NavLink
+                  to="/restaurants"
+                  className="hover:text-secondary transition-colors"
+                >
+                  Restaurants
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/recipes"
+                  className="hover:text-secondary transition-colors"
+                >
+                  Recipes
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/about"
+                  className="hover:text-secondary transition-colors"
+                >
+                  Our Story
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/collections"
+                  className="hover:text-secondary transition-colors"
+                >
+                  Shop
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="font-semibold tracking-wide text-sm uppercase mb-3 text-secondary">
+              Get Involved
+            </h4>
+            <p className="text-sm text-primary-foreground/70 leading-relaxed">
+              Are you a restaurant owner who wants to be featured? We'd love to
+              hear from you.
+            </p>
+            <a
+              href="mailto:hello@locallysauced.co.uk"
+              className="inline-block mt-3 text-sm text-secondary hover:underline"
+            >
+              hello@locallysauced.co.uk
+            </a>
+          </div>
+        </div>
+
+        <hr className="my-8 border-primary-foreground/20" />
+
+        <p className="text-center text-xs text-primary-foreground/50">
+          &copy; {new Date().getFullYear()} Locally Sauced. All rights reserved.
+        </p>
+      </div>
+    </footer>
   );
 }
-
-/**
- * @param {{
- *   menu: FooterQuery['menu'];
- *   primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
- *   publicStoreDomain: string;
- * }}
- */
-function FooterMenu({menu, primaryDomainUrl, publicStoreDomain}) {
-  return (
-    <nav className="footer-menu" role="navigation">
-      {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
-        if (!item.url) return null;
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        const isExternal = !url.startsWith('/');
-        return isExternal ? (
-          <a href={url} key={item.id} rel="noopener noreferrer" target="_blank">
-            {item.title}
-          </a>
-        ) : (
-          <NavLink
-            end
-            key={item.id}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
-            {item.title}
-          </NavLink>
-        );
-      })}
-    </nav>
-  );
-}
-
-const FALLBACK_FOOTER_MENU = {
-  id: 'gid://shopify/Menu/199655620664',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461633060920',
-      resourceId: 'gid://shopify/ShopPolicy/23358046264',
-      tags: [],
-      title: 'Privacy Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/privacy-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633093688',
-      resourceId: 'gid://shopify/ShopPolicy/23358013496',
-      tags: [],
-      title: 'Refund Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/refund-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633126456',
-      resourceId: 'gid://shopify/ShopPolicy/23358111800',
-      tags: [],
-      title: 'Shipping Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/shipping-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159224',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: 'Terms of Service',
-      type: 'SHOP_POLICY',
-      url: '/policies/terms-of-service',
-      items: [],
-    },
-  ],
-};
-
-/**
- * @param {{
- *   isActive: boolean;
- *   isPending: boolean;
- * }}
- */
-function activeLinkStyle({isActive, isPending}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white',
-  };
-}
-
-/**
- * @typedef {Object} FooterProps
- * @property {Promise<FooterQuery|null>} footer
- * @property {HeaderQuery} header
- * @property {string} publicStoreDomain
- */
-
-/** @typedef {import('storefrontapi.generated').FooterQuery} FooterQuery */
-/** @typedef {import('storefrontapi.generated').HeaderQuery} HeaderQuery */

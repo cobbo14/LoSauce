@@ -11,7 +11,6 @@ import {
 } from 'react-router';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
-import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import {PageLayout} from './components/PageLayout';
 
@@ -62,31 +61,48 @@ export function links() {
  * @param {Route.LoaderArgs} args
  */
 export async function loader(args) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
+  try {
+    const deferredData = loadDeferredData(args);
+    const criticalData = await loadCriticalData(args);
+    const {storefront, env} = args.context;
 
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  const {storefront, env} = args.context;
-
-  return {
-    ...deferredData,
-    ...criticalData,
-    publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
-    shop: getShopAnalytics({
-      storefront,
-      publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
-    }),
-    consent: {
-      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
-      storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      withPrivacyBanner: false,
-      // localize the privacy banner
-      country: args.context.storefront.i18n.country,
-      language: args.context.storefront.i18n.language,
-    },
-  };
+    return {
+      ...deferredData,
+      ...criticalData,
+      publicStoreDomain: env.PUBLIC_STORE_DOMAIN || '',
+      shop: getShopAnalytics({
+        storefront,
+        publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
+      }),
+      consent: {
+        checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN || '',
+        storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN || '',
+        withPrivacyBanner: false,
+        country: args.context.storefront.i18n.country,
+        language: args.context.storefront.i18n.language,
+      },
+    };
+  } catch (error) {
+    console.error('Root loader error:', error);
+    return {
+      header: {
+        shop: {
+          id: 'fallback',
+          name: 'Locally Sauced',
+          description: 'Real Recipes from Real Local Restaurants',
+          primaryDomain: {url: 'https://locallysauced.co.uk'},
+          brand: null,
+        },
+        menu: null,
+      },
+      footer: Promise.resolve(null),
+      cart: Promise.resolve(null),
+      isLoggedIn: Promise.resolve(false),
+      publicStoreDomain: '',
+      shop: {shopId: '', currency: 'GBP', acceptedLanguage: 'EN', hydrogenSubchannelId: ''},
+      consent: {checkoutDomain: '', storefrontAccessToken: '', withPrivacyBanner: false, country: 'GB', language: 'EN'},
+    };
+  }
 }
 
 /**
@@ -97,15 +113,30 @@ export async function loader(args) {
 async function loadCriticalData({context}) {
   const {storefront} = context;
 
-  const [header] = await Promise.all([
-    storefront.query(HEADER_QUERY, {
-      cache: storefront.CacheLong(),
-      variables: {
-        headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+  let header = null;
+  try {
+    const [headerResult] = await Promise.all([
+      storefront.query(HEADER_QUERY, {
+        cache: storefront.CacheLong(),
+        variables: {
+          headerMenuHandle: 'main-menu',
+        },
+      }),
+    ]);
+    header = headerResult;
+  } catch (error) {
+    console.error('Failed to load header:', error);
+    header = {
+      shop: {
+        id: 'fallback',
+        name: 'Locally Sauced',
+        description: 'Real Recipes from Real Local Restaurants',
+        primaryDomain: {url: 'https://locallysauced.co.uk'},
+        brand: null,
       },
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
+      menu: null,
+    };
+  }
 
   return {header};
 }
@@ -150,7 +181,6 @@ export function Layout({children}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
         <Meta />
         <Links />
