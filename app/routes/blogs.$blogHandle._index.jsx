@@ -72,19 +72,32 @@ export default function Blog() {
   const {articles} = blog;
 
   return (
-    <div className="blog">
-      <h1>{blog.title}</h1>
-      <div className="blog-grid">
-        <PaginatedResourceSection connection={articles}>
-          {({node: article, index}) => (
-            <ArticleItem
-              article={article}
-              key={article.id}
-              loading={index < 2 ? 'eager' : 'lazy'}
-            />
-          )}
-        </PaginatedResourceSection>
-      </div>
+    <div>
+      <section className="bg-primary relative overflow-hidden py-16 md:py-24">
+        <div className="absolute inset-0 opacity-10" style={{background: 'radial-gradient(circle at 30% 50%, var(--secondary) 0%, transparent 60%)'}} />
+        <div className="relative max-w-6xl mx-auto px-4 text-center">
+          <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
+            Blog
+          </span>
+          <h1 className="text-3xl md:text-5xl font-bold text-primary-foreground mt-2 mb-4">
+            {blog.title}
+          </h1>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <PaginatedResourceSection connection={articles}>
+            {({node: article, index}) => (
+              <ArticleItem
+                article={article}
+                key={article.id}
+                loading={index < 2 ? 'eager' : 'lazy'}
+              />
+            )}
+          </PaginatedResourceSection>
+        </div>
+      </section>
     </div>
   );
 }
@@ -102,10 +115,10 @@ function ArticleItem({article, loading}) {
     day: 'numeric',
   }).format(new Date(article.publishedAt));
   return (
-    <div className="blog-article" key={article.id}>
+    <div key={article.id} className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow">
       <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
         {article.image && (
-          <div className="blog-article-image">
+          <div className="overflow-hidden">
             <Image
               alt={article.image.altText || article.title}
               aspectRatio="3/2"
@@ -115,8 +128,10 @@ function ArticleItem({article, loading}) {
             />
           </div>
         )}
-        <h3>{article.title}</h3>
-        <small>{publishedAt}</small>
+        <div className="p-5">
+          <h3 className="font-semibold text-lg mb-1">{article.title}</h3>
+          <small className="text-muted-foreground text-sm">{publishedAt}</small>
+        </div>
       </Link>
     </div>
   );
@@ -150,7 +165,6 @@ const BLOGS_QUERY = `#graphql
         }
         pageInfo {
           hasPreviousPage
-          hasNextPage
           hasNextPage
           endCursor
           startCursor

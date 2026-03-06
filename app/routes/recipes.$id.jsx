@@ -5,8 +5,14 @@ import {regions} from '~/data/regions';
 
 export const meta = ({params}) => {
   const recipe = recipes.find((r) => r.id === params.id);
+  if (!recipe) {
+    return [{title: 'Recipe — Locally Sauced'}];
+  }
   return [
-    {title: recipe ? `${recipe.name} — Locally Sauced` : 'Recipe — Locally Sauced'},
+    {title: `${recipe.name} — Locally Sauced`},
+    {name: 'description', content: recipe.description},
+    {property: 'og:title', content: `${recipe.name} — Locally Sauced`},
+    {property: 'og:description', content: recipe.description},
   ];
 };
 

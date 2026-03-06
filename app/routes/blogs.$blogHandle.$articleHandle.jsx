@@ -1,4 +1,4 @@
-import {useLoaderData} from 'react-router';
+import {Link, useLoaderData, useParams} from 'react-router';
 import {Image} from '@shopify/hydrogen';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
@@ -75,6 +75,7 @@ function loadDeferredData({context}) {
 export default function Article() {
   /** @type {LoaderReturnData} */
   const {article} = useLoaderData();
+  const {blogHandle} = useParams();
   const {title, image, contentHtml, author} = article;
 
   const publishedDate = new Intl.DateTimeFormat('en-US', {
@@ -84,19 +85,38 @@ export default function Article() {
   }).format(new Date(article.publishedAt));
 
   return (
-    <div className="article">
-      <h1>
-        {title}
-        <div>
-          <time dateTime={article.publishedAt}>{publishedDate}</time> &middot;{' '}
-          <address>{author?.name}</address>
-        </div>
-      </h1>
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <Link
+        to={`/blogs/${blogHandle}`}
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to blog
+      </Link>
 
-      {image && <Image data={image} sizes="90vw" loading="eager" />}
+      <header className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold mb-3">{title}</h1>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <time dateTime={article.publishedAt}>{publishedDate}</time>
+          {author?.name && (
+            <>
+              <span>&middot;</span>
+              <address className="not-italic">{author.name}</address>
+            </>
+          )}
+        </div>
+      </header>
+
+      {image && (
+        <div className="mb-8 rounded-lg overflow-hidden">
+          <Image data={image} sizes="90vw" loading="eager" />
+        </div>
+      )}
       <div
         dangerouslySetInnerHTML={{__html: contentHtml}}
-        className="article"
+        className="prose max-w-none"
       />
     </div>
   );

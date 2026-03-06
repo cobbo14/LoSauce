@@ -44,15 +44,18 @@ export default function Policy() {
   const {policy} = useLoaderData();
 
   return (
-    <div className="policy">
-      <br />
-      <br />
-      <div>
-        <Link to="/policies">← Back to Policies</Link>
-      </div>
-      <br />
-      <h1>{policy.title}</h1>
-      <div dangerouslySetInnerHTML={{__html: policy.body}} />
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <Link
+        to="/policies"
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Policies
+      </Link>
+      <h1 className="text-3xl md:text-4xl font-bold mb-8">{policy.title}</h1>
+      <div dangerouslySetInnerHTML={{__html: policy.body}} className="prose max-w-none" />
     </div>
   );
 }

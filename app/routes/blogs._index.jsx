@@ -59,22 +59,35 @@ export default function Blogs() {
   const {blogs} = useLoaderData();
 
   return (
-    <div className="blogs">
-      <h1>Blogs</h1>
-      <div className="blogs-grid">
-        <PaginatedResourceSection connection={blogs}>
-          {({node: blog}) => (
-            <Link
-              className="blog"
-              key={blog.handle}
-              prefetch="intent"
-              to={`/blogs/${blog.handle}`}
-            >
-              <h2>{blog.title}</h2>
-            </Link>
-          )}
-        </PaginatedResourceSection>
-      </div>
+    <div>
+      <section className="bg-primary relative overflow-hidden py-16 md:py-24">
+        <div className="absolute inset-0 opacity-10" style={{background: 'radial-gradient(circle at 30% 50%, var(--secondary) 0%, transparent 60%)'}} />
+        <div className="relative max-w-6xl mx-auto px-4 text-center">
+          <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
+            Read
+          </span>
+          <h1 className="text-3xl md:text-5xl font-bold text-primary-foreground mt-2 mb-4">
+            Blogs
+          </h1>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PaginatedResourceSection connection={blogs}>
+            {({node: blog}) => (
+              <Link
+                key={blog.handle}
+                prefetch="intent"
+                to={`/blogs/${blog.handle}`}
+                className="bg-card rounded-lg border border-border p-6 hover:shadow-md transition-shadow"
+              >
+                <h2 className="text-xl font-semibold">{blog.title}</h2>
+              </Link>
+            )}
+          </PaginatedResourceSection>
+        </div>
+      </section>
     </div>
   );
 }

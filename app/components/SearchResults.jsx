@@ -27,9 +27,9 @@ function SearchResultsArticles({term, articles}) {
   }
 
   return (
-    <div className="search-result">
-      <h2>Articles</h2>
-      <div>
+    <section className="space-y-4 border-b border-border pb-8">
+      <h2 className="text-lg font-semibold uppercase tracking-wide">Articles</h2>
+      <div className="space-y-2">
         {articles?.nodes?.map((article) => {
           const articleUrl = urlWithTrackingParams({
             baseUrl: `/blogs/${article.handle}`,
@@ -38,16 +38,15 @@ function SearchResultsArticles({term, articles}) {
           });
 
           return (
-            <div className="search-results-item" key={article.id}>
-              <Link prefetch="intent" to={articleUrl}>
+            <div key={article.id}>
+              <Link prefetch="intent" to={articleUrl} className="text-foreground hover:text-secondary transition-colors">
                 {article.title}
               </Link>
             </div>
           );
         })}
       </div>
-      <br />
-    </div>
+    </section>
   );
 }
 
@@ -60,9 +59,9 @@ function SearchResultsPages({term, pages}) {
   }
 
   return (
-    <div className="search-result">
-      <h2>Pages</h2>
-      <div>
+    <section className="space-y-4 border-b border-border pb-8">
+      <h2 className="text-lg font-semibold uppercase tracking-wide">Pages</h2>
+      <div className="space-y-2">
         {pages?.nodes?.map((page) => {
           const pageUrl = urlWithTrackingParams({
             baseUrl: `/pages/${page.handle}`,
@@ -71,16 +70,15 @@ function SearchResultsPages({term, pages}) {
           });
 
           return (
-            <div className="search-results-item" key={page.id}>
-              <Link prefetch="intent" to={pageUrl}>
+            <div key={page.id}>
+              <Link prefetch="intent" to={pageUrl} className="text-foreground hover:text-secondary transition-colors">
                 {page.title}
               </Link>
             </div>
           );
         })}
       </div>
-      <br />
-    </div>
+    </section>
   );
 }
 
@@ -93,8 +91,8 @@ function SearchResultsProducts({term, products}) {
   }
 
   return (
-    <div className="search-result">
-      <h2>Products</h2>
+    <section className="space-y-4 border-b border-border pb-8">
+      <h2 className="text-lg font-semibold uppercase tracking-wide">Products</h2>
       <Pagination connection={products}>
         {({nodes, isLoading, NextLink, PreviousLink}) => {
           const ItemsMarkup = nodes.map((product) => {
@@ -108,14 +106,14 @@ function SearchResultsProducts({term, products}) {
             const image = product?.selectedOrFirstAvailableVariant?.image;
 
             return (
-              <div className="search-results-item" key={product.id}>
-                <Link prefetch="intent" to={productUrl}>
+              <div key={product.id} className="py-3">
+                <Link prefetch="intent" to={productUrl} className="flex items-center gap-4 group">
                   {image && (
-                    <Image data={image} alt={product.title} width={50} />
+                    <Image data={image} alt={product.title} width={50} className="rounded" />
                   )}
                   <div>
-                    <p>{product.title}</p>
-                    <small>{price && <Money data={price} />}</small>
+                    <p className="font-medium group-hover:text-secondary transition-colors">{product.title}</p>
+                    <small className="text-muted-foreground">{price && <Money data={price} />}</small>
                   </div>
                 </Link>
               </div>
@@ -126,29 +124,27 @@ function SearchResultsProducts({term, products}) {
             <div>
               <div>
                 <PreviousLink>
-                  {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
+                  {isLoading ? 'Loading...' : <span className="text-sm text-secondary hover:underline">↑ Load previous</span>}
                 </PreviousLink>
               </div>
-              <div>
+              <div className="divide-y divide-border">
                 {ItemsMarkup}
-                <br />
               </div>
-              <div>
+              <div className="mt-4">
                 <NextLink>
-                  {isLoading ? 'Loading...' : <span>Load more ↓</span>}
+                  {isLoading ? 'Loading...' : <span className="text-sm text-secondary hover:underline">Load more ↓</span>}
                 </NextLink>
               </div>
             </div>
           );
         }}
       </Pagination>
-      <br />
-    </div>
+    </section>
   );
 }
 
 function SearchResultsEmpty() {
-  return <p>No results, try a different search.</p>;
+  return <p className="mt-8 text-muted-foreground">No results, try a different search.</p>;
 }
 
 /** @typedef {RegularSearchReturn['result']['items']} SearchItems */
