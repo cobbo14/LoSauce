@@ -2,6 +2,7 @@ import {Suspense, useState} from 'react';
 import {Await, NavLink, useAsyncValue, useLocation} from 'react-router';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
+import logoImg from '~/assets/logo.png';
 
 const NAV_LINKS = [
   {to: '/restaurants', label: 'Restaurants'},
@@ -24,6 +25,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
           className="flex items-center gap-2"
           onClick={() => setOpen(false)}
         >
+          <img src={logoImg} alt="Locally Sauced" className="h-10 w-10 rounded-full" />
           <span className="text-xl font-bold tracking-wider uppercase text-secondary">
             Locally Sauced
           </span>

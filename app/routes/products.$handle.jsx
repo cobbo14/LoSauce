@@ -1,4 +1,4 @@
-import {useLoaderData} from 'react-router';
+import {useLoaderData, Link} from 'react-router';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -106,36 +106,57 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        <ProductImage image={selectedVariant?.image} />
-        <div className="md:sticky md:top-24 self-start space-y-6">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-              {title}
-            </h1>
-            <div className="mt-3">
-              <ProductPrice
-                price={selectedVariant?.price}
-                compareAtPrice={selectedVariant?.compareAtPrice}
-              />
+    <div>
+      <section className="bg-muted border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <Link
+            to="/collections/all"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span aria-hidden="true">&larr;</span>
+            Back to Shop
+          </Link>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <ProductImage image={selectedVariant?.image} />
+          <div className="md:sticky md:top-24 self-start space-y-6">
+            <div>
+              <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
+                Locally Sauced
+              </span>
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground mt-2">
+                {title}
+              </h1>
+              <div className="mt-3">
+                <ProductPrice
+                  price={selectedVariant?.price}
+                  compareAtPrice={selectedVariant?.compareAtPrice}
+                />
+              </div>
             </div>
-          </div>
-          <ProductForm
-            productOptions={productOptions}
-            selectedVariant={selectedVariant}
-          />
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-3">
-              Description
-            </h2>
-            <div
-              className="text-muted-foreground leading-relaxed prose prose-sm"
-              dangerouslySetInnerHTML={{__html: descriptionHtml}}
+            <hr className="border-border" />
+            <ProductForm
+              productOptions={productOptions}
+              selectedVariant={selectedVariant}
             />
+            {descriptionHtml && (
+              <div>
+                <hr className="border-border mb-6" />
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+                  Description
+                </h2>
+                <div
+                  className="text-muted-foreground leading-relaxed prose prose-sm"
+                  dangerouslySetInnerHTML={{__html: descriptionHtml}}
+                />
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </section>
       <Analytics.ProductView
         data={{
           products: [

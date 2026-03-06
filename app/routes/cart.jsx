@@ -6,7 +6,7 @@ import {CartMain} from '~/components/CartMain';
  * @type {Route.MetaFunction}
  */
 export const meta = () => {
-  return [{title: `Hydrogen | Cart`}];
+  return [{title: `Locally Sauced | Cart`}];
 };
 
 /**
@@ -112,9 +112,22 @@ export default function Cart() {
   const cart = useLoaderData();
 
   return (
-    <div className="cart">
-      <h1>Cart</h1>
-      <CartMain layout="page" cart={cart} />
+    <div>
+      <section className="bg-primary relative overflow-hidden py-16 md:py-24">
+        <div className="absolute inset-0 opacity-10" style={{background: 'radial-gradient(circle at 30% 50%, var(--secondary) 0%, transparent 60%)'}} />
+        <div className="relative max-w-6xl mx-auto px-4 text-center">
+          <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
+            Locally Sauced
+          </span>
+          <h1 className="text-3xl md:text-5xl font-bold text-primary-foreground mt-2">
+            Your Cart
+          </h1>
+        </div>
+      </section>
+
+      <section className="max-w-4xl mx-auto px-4 py-16">
+        <CartMain layout="page" cart={cart} />
+      </section>
     </div>
   );
 }
