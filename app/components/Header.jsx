@@ -8,6 +8,7 @@ const NAV_LINKS = [
   {to: '/restaurants', label: 'Restaurants'},
   {to: '/recipes', label: 'Recipes'},
   {to: '/about', label: 'Our Story'},
+  {to: '/contact', label: 'Contact'},
   {to: '/collections', label: 'Shop'},
 ];
 

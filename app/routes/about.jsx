@@ -33,6 +33,27 @@ const values = [
   },
 ];
 
+const steps = [
+  {
+    number: '01',
+    title: 'We Find the Restaurants',
+    description:
+      'We scout the best independent restaurants in each city — the hidden gems, the neighbourhood favourites, the places locals swear by.',
+  },
+  {
+    number: '02',
+    title: 'We Collect the Recipes',
+    description:
+      'We sit down with the chefs and owners, and they share the dishes they\'re most proud of. Not simplified versions — the real recipes.',
+  },
+  {
+    number: '03',
+    title: 'We Create the Binder',
+    description:
+      'Those recipes become beautifully printed cards, collected in a premium binder — one edition per city, something to keep and hand down.',
+  },
+];
+
 export const meta = () => {
   return [
     {title: 'Our Story — Locally Sauced'},
@@ -94,6 +115,29 @@ export default function AboutPage() {
         </p>
       </div>
 
+      {/* How It Works */}
+      <div className="mb-16">
+        <div className="text-center mb-10">
+          <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
+            How It Works
+          </span>
+          <h2 className="text-3xl font-bold mt-3">From Kitchen to Your Shelf</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {steps.map((step) => (
+            <div key={step.number} className="text-center">
+              <span className="text-4xl font-bold text-secondary/30">{step.number}</span>
+              <h3 className="font-semibold text-lg mt-2 mb-2">{step.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {step.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <hr className="mb-16 border-border" />
+
       {/* Values */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
         {values.map((value, i) => (
@@ -120,12 +164,12 @@ export default function AboutPage() {
           love to talk.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="mailto:hello@locallysauced.co.uk"
+          <Link
+            to="/partner"
             className="inline-flex items-center justify-center px-6 py-2.5 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
           >
-            Get In Touch
-          </a>
+            Learn About Partnering
+          </Link>
           <Link
             to="/collections"
             className="inline-flex items-center justify-center px-6 py-2.5 rounded-md border border-border font-medium hover:bg-muted transition-colors"
