@@ -1,7 +1,10 @@
-import {Link, useParams, redirect} from 'react-router';
+import {Link, useParams, useLoaderData, data as remixData} from 'react-router';
 import {restaurants} from '~/data/restaurants';
 import {recipes} from '~/data/recipes';
 import {regions} from '~/data/regions';
+import {getActiveOffers} from '~/lib/discounts.server';
+import {DiscountQRCode} from '~/components/DiscountQRCode';
+import {CUSTOMER_EMAIL_QUERY} from '~/graphql/customer-account/CustomerEmailQuery';
 
 export const meta = ({params}) => {
   const restaurant = restaurants.find((r) => r.id === params.id);
@@ -10,8 +13,48 @@ export const meta = ({params}) => {
   ];
 };
 
+/**
+ * @param {Route.LoaderArgs}
+ */
+export async function loader({params, context}) {
+  const {supabaseAdmin, customerAccount} = context;
+
+  let offer = null;
+  let customerCode = null;
+
+  if (supabaseAdmin) {
+    // Get active offer for this restaurant
+    const offers = await getActiveOffers(supabaseAdmin, params.id);
+    offer = offers[0] || null;
+
+    // Check if logged-in user has a code for this restaurant
+    try {
+      const isLoggedIn = await customerAccount.isLoggedIn();
+      if (isLoggedIn && offer) {
+        const {data: customerData} = await customerAccount.query(CUSTOMER_EMAIL_QUERY);
+        const email = customerData?.customer?.emailAddress?.emailAddress;
+        if (email) {
+          const {data: codes} = await supabaseAdmin
+            .from('restaurant_discount_codes')
+            .select('code, status, expires_at')
+            .eq('restaurant_id', params.id)
+            .eq('customer_email', email)
+            .eq('status', 'active')
+            .limit(1);
+          customerCode = codes?.[0] || null;
+        }
+      }
+    } catch {
+      // Not logged in — that's fine
+    }
+  }
+
+  return remixData({offer, customerCode});
+}
+
 export default function RestaurantDetailPage() {
   const {id} = useParams();
+  const {offer, customerCode} = useLoaderData();
   const restaurant = restaurants.find((r) => r.id === id);
 
   if (!restaurant) {
@@ -121,6 +164,61 @@ export default function RestaurantDetailPage() {
         </div>
       </div>
 
+      {/* Discount Card */}
+      {offer && (
+        <div className="mb-10">
+          {customerCode ? (
+            <div className="bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-xl p-6">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="flex-1 text-center md:text-left">
+                  <span className="text-xs font-semibold tracking-[0.15em] uppercase text-secondary">
+                    Your Exclusive Discount
+                  </span>
+                  <h3 className="text-xl font-bold mt-1 text-primary">
+                    {offer.offer_title}
+                  </h3>
+                  {offer.offer_description && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {offer.offer_description}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground mt-3">
+                    Show the QR code to your server to redeem.
+                  </p>
+                </div>
+                <DiscountQRCode code={customerCode.code} size={140} />
+              </div>
+            </div>
+          ) : (
+            <div className="bg-card border border-border rounded-xl p-6 text-center">
+              <svg
+                className="w-8 h-8 text-secondary mx-auto mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"
+                />
+              </svg>
+              <p className="font-semibold text-primary">{offer.offer_title}</p>
+              <p className="text-sm text-muted-foreground mt-1 mb-3">
+                Buy the {region?.name} binder to unlock this exclusive discount.
+              </p>
+              <Link
+                to="/collections"
+                className="inline-flex items-center justify-center px-5 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                Get the Binder
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
+
       <hr className="mb-10 border-border" />
 
       {/* Recipes */}
@@ -203,3 +301,5 @@ export default function RestaurantDetailPage() {
     </div>
   );
 }
+
+/** @typedef {import('./+types/restaurants.$id').Route} Route */

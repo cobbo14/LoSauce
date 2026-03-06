@@ -1,8 +1,9 @@
-import {Link, useSearchParams} from 'react-router';
+import {Link, useSearchParams, useLoaderData, data as remixData} from 'react-router';
 import {useState, useEffect} from 'react';
 import {restaurants} from '~/data/restaurants';
 import {regions} from '~/data/regions';
 import {recipes} from '~/data/recipes';
+import {getActiveOffers} from '~/lib/discounts.server';
 
 export const meta = () => {
   return [
@@ -15,7 +16,25 @@ export const meta = () => {
   ];
 };
 
+/**
+ * @param {Route.LoaderArgs}
+ */
+export async function loader({context}) {
+  const {supabaseAdmin} = context;
+  let offersMap = {};
+
+  if (supabaseAdmin) {
+    const offers = await getActiveOffers(supabaseAdmin);
+    for (const offer of offers) {
+      offersMap[offer.restaurant_id] = offer.offer_title;
+    }
+  }
+
+  return remixData({offersMap});
+}
+
 export default function RestaurantsPage() {
+  const {offersMap} = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedRegion, setSelectedRegion] = useState(
     searchParams.get('region') ?? 'all',
@@ -83,6 +102,7 @@ export default function RestaurantsPage() {
           const recipeCount = recipes.filter(
             (rec) => rec.restaurantId === restaurant.id,
           ).length;
+          const hasOffer = offersMap[restaurant.id];
           return (
             <Link
               key={restaurant.id}
@@ -90,7 +110,7 @@ export default function RestaurantsPage() {
               className="group"
             >
               <div className="bg-card rounded-lg border border-border hover:shadow-md transition-shadow h-full cursor-pointer">
-                <div className="h-36 rounded-t-lg bg-gradient-to-br from-primary/15 to-secondary/15 flex items-center justify-center">
+                <div className="h-36 rounded-t-lg bg-gradient-to-br from-primary/15 to-secondary/15 flex items-center justify-center relative">
                   <svg
                     className="w-10 h-10 text-primary/30"
                     fill="none"
@@ -104,6 +124,11 @@ export default function RestaurantsPage() {
                       d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.047 8.287 8.287 0 009 9.601a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"
                     />
                   </svg>
+                  {hasOffer && (
+                    <span className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full bg-primary text-primary-foreground font-medium">
+                      Discount available
+                    </span>
+                  )}
                 </div>
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-2 mb-2">

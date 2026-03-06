@@ -1,15 +1,7 @@
 import {createHydrogenContext} from '@shopify/hydrogen';
 import {AppSession} from '~/lib/session';
 import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
-
-// Define the additional context object
-const additionalContext = {
-  // Additional context for custom properties, CMS clients, 3P SDKs, etc.
-  // These will be available as both context.propertyName and context.get(propertyContext)
-  // Example of complex objects that could be added:
-  // cms: await createCMSClient(env),
-  // reviews: await createReviewsClient(env),
-};
+import {createSupabaseAdmin, createSupabaseClient} from '~/lib/supabase.server';
 
 /**
  * Creates Hydrogen context for React Router 7.9.x
@@ -36,6 +28,16 @@ export async function createHydrogenRouterContext(
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
+  // Initialise Supabase clients (only if env vars are configured)
+  const supabase =
+    env.SUPABASE_URL && env.SUPABASE_ANON_KEY
+      ? createSupabaseClient(env)
+      : null;
+  const supabaseAdmin =
+    env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
+      ? createSupabaseAdmin(env)
+      : null;
+
   const hydrogenContext = createHydrogenContext(
     {
       env,
@@ -43,16 +45,15 @@ export async function createHydrogenRouterContext(
       cache,
       waitUntil,
       session,
-      // Or detect from URL path based on locale subpath, cookies, or any other strategy
       i18n: {language: 'EN', country: 'GB'},
       cart: {
         queryFragment: CART_QUERY_FRAGMENT,
       },
     },
-    additionalContext,
+    {supabase, supabaseAdmin},
   );
 
   return hydrogenContext;
 }
 
-/** @typedef {Class<additionalContext>} AdditionalContextType */
+/** @typedef {{ supabase: import('@supabase/supabase-js').SupabaseClient | null, supabaseAdmin: import('@supabase/supabase-js').SupabaseClient | null }} AdditionalContextType */
