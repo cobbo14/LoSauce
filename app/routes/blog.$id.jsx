@@ -4,9 +4,52 @@ import {blogPosts} from '~/data/blog';
 export const meta = ({params}) => {
   const post = blogPosts.find((p) => p.id === params.id);
   if (!post) return [{title: 'Post Not Found — Locally Sauced'}];
+
   return [
     {title: `${post.title} — Locally Sauced`},
     {name: 'description', content: post.excerpt},
+    {
+      'script:ld+json': {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: post.title,
+        description: post.excerpt,
+        datePublished: post.date,
+        author: {
+          '@type': 'Organization',
+          name: 'Locally Sauced',
+          url: 'https://locallysauced.co.uk',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'Locally Sauced',
+          url: 'https://locallysauced.co.uk',
+        },
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': `https://locallysauced.co.uk/blog/${post.id}`,
+        },
+      },
+    },
+    {
+      'script:ld+json': {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Blog',
+            item: 'https://locallysauced.co.uk/blog',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: post.title,
+          },
+        ],
+      },
+    },
   ];
 };
 

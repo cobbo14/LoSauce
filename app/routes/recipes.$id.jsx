@@ -8,12 +8,73 @@ export const meta = ({params}) => {
   if (!recipe) {
     return [{title: 'Recipe — Locally Sauced'}];
   }
-  return [
+
+  const restaurant = restaurants.find((r) => r.id === recipe.restaurantId);
+  const totalTime = recipe.prepTime + recipe.cookTime;
+
+  const meta = [
     {title: `${recipe.name} — Locally Sauced`},
     {name: 'description', content: recipe.description},
     {property: 'og:title', content: `${recipe.name} — Locally Sauced`},
     {property: 'og:description', content: recipe.description},
   ];
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Recipe',
+    name: recipe.name,
+    description: recipe.description,
+    author: {
+      '@type': 'Restaurant',
+      name: restaurant?.name || 'Locally Sauced',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Locally Sauced',
+      url: 'https://locallysauced.co.uk',
+    },
+    prepTime: `PT${recipe.prepTime}M`,
+    cookTime: `PT${recipe.cookTime}M`,
+    totalTime: `PT${totalTime}M`,
+    recipeYield: `${recipe.servings} servings`,
+    recipeCategory: recipe.cuisine,
+    recipeIngredient: recipe.ingredients,
+    recipeInstructions: recipe.instructions.map((step, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      text: step,
+    })),
+  };
+
+  if (recipe.dietary.length > 0) {
+    jsonLd.suitableForDiet = recipe.dietary.map(
+      (d) => `https://schema.org/${d.replace(/[\s-]/g, '')}Diet`,
+    );
+  }
+
+  meta.push({'script:ld+json': jsonLd});
+
+  meta.push({
+    'script:ld+json': {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Recipes',
+          item: 'https://locallysauced.co.uk/recipes',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: recipe.name,
+        },
+      ],
+    },
+  });
+
+  return meta;
 };
 
 export default function RecipeDetailPage() {

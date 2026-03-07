@@ -16,13 +16,86 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
  * @type {Route.MetaFunction}
  */
 export const meta = ({data}) => {
-  return [
-    {title: `Locally Sauced | ${data?.product.title ?? ''}`},
+  const product = data?.product;
+  if (!product) {
+    return [{title: 'Product — Locally Sauced'}];
+  }
+
+  const variant = product.selectedOrFirstAvailableVariant;
+  const meta = [
+    {title: `Locally Sauced | ${product.title}`},
     {
       rel: 'canonical',
-      href: `/products/${data?.product.handle}`,
+      href: `/products/${product.handle}`,
     },
   ];
+
+  if (product.seo?.description || product.description) {
+    meta.push({
+      name: 'description',
+      content: product.seo?.description || product.description,
+    });
+  }
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    description: product.description,
+    url: `https://locallysauced.co.uk/products/${product.handle}`,
+    brand: {
+      '@type': 'Brand',
+      name: 'Locally Sauced',
+    },
+  };
+
+  if (variant?.image?.url) {
+    jsonLd.image = variant.image.url;
+  }
+
+  if (variant?.sku) {
+    jsonLd.sku = variant.sku;
+  }
+
+  if (variant?.price) {
+    jsonLd.offers = {
+      '@type': 'Offer',
+      url: `https://locallysauced.co.uk/products/${product.handle}`,
+      priceCurrency: variant.price.currencyCode,
+      price: variant.price.amount,
+      availability: variant.availableForSale
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Locally Sauced',
+      },
+    };
+  }
+
+  meta.push({'script:ld+json': jsonLd});
+
+  meta.push({
+    'script:ld+json': {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Shop',
+          item: 'https://locallysauced.co.uk/collections/all',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: product.title,
+        },
+      ],
+    },
+  });
+
+  return meta;
 };
 
 /**

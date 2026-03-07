@@ -3,6 +3,7 @@ import {Image, Money} from '@shopify/hydrogen';
 import {useVariantUrl} from '~/lib/variants';
 import {regions} from '~/data/regions';
 import {restaurants} from '~/data/restaurants';
+import heroLogoImg from '~/assets/hero-logo.png';
 
 const featuredRestaurants = restaurants.filter((r) => r.featured).slice(0, 6);
 
@@ -42,7 +43,7 @@ const steps = [
     ),
     title: 'Local Restaurants',
     description:
-      'We partner with the best independent restaurants in your city — from classic British bistros to vibrant street food kitchens.',
+      'We partner with the best independent restaurants in your area. Ranging from classic British bistros to vibrant street food kitchens.',
   },
   {
     icon: (
@@ -52,7 +53,7 @@ const steps = [
     ),
     title: 'Exclusive Recipes',
     description:
-      'Each restaurant shares their signature recipes — the real thing, written exactly as they cook it in their kitchen.',
+      'Each restaurant shares the secrets behind their signature recipes just for you, written exactly as they cook it in their kitchen.',
   },
   {
     icon: (
@@ -62,17 +63,48 @@ const steps = [
     ),
     title: 'Your Binder',
     description:
-      'The recipes arrive as beautiful recipe cards, ready to slot into your premium Locally Sauced binder.',
+      'The recipes arrive as beautiful recipe cards which can be sorted, removed or built upon within your premium Locally Sauced binder.',
   },
 ];
 
 export const meta = () => {
   return [
-    {title: 'Locally Sauced — Real Recipes from Real Local Restaurants'},
+    {title: 'Locally Sauced — The Cookbook Your Community Built'},
     {
       name: 'description',
       content:
         'Locally Sauced collects exclusive recipes from the best independent restaurants in your city — presented in a beautiful binder.',
+    },
+    {
+      'script:ld+json': {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Locally Sauced',
+        url: 'https://locallysauced.co.uk',
+        logo: 'https://locallysauced.co.uk/hero-logo.png',
+        description:
+          'Locally Sauced collects exclusive recipes from the best independent restaurants in your city — presented in a beautiful binder.',
+        email: 'hello@locallysauced.co.uk',
+        sameAs: [
+          'https://instagram.com/locallysaucedHQ',
+          'https://tiktok.com/@locallysauced',
+          'https://facebook.com/locallysauced',
+          'https://x.com/locallysauced',
+        ],
+      },
+    },
+    {
+      'script:ld+json': {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Locally Sauced',
+        url: 'https://locallysauced.co.uk',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://locallysauced.co.uk/search?q={search_term_string}',
+          'query-input': 'required name=search_term_string',
+        },
+      },
     },
   ];
 };
@@ -134,32 +166,37 @@ export default function Homepage() {
               'radial-gradient(circle at 30% 50%, oklch(0.73 0.12 75) 0%, transparent 60%), radial-gradient(circle at 80% 20%, oklch(0.73 0.12 75) 0%, transparent 50%)',
           }}
         />
-        <div className="relative max-w-6xl mx-auto px-4 py-24 md:py-36 text-center">
+        <div className="relative max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
+          <img src={heroLogoImg} alt="Locally Sauced" className="w-48 md:w-56 mx-auto mb-6" />
           <span className="inline-block text-secondary text-sm font-semibold tracking-[0.2em] uppercase mb-4">
             The cookbook from your neighbourhood
           </span>
           <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground leading-tight mb-6">
-            Real Recipes from
+            The Cookbook
             <br />
-            <span className="text-secondary">Real Local Restaurants</span>
+            <span className="text-secondary">Your Community Built</span>
           </h1>
           <p className="text-primary-foreground/70 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
             Locally Sauced collects exclusive recipes from the best independent
-            restaurants in your city — presented in a beautiful binder you'll
-            treasure for years.
+            restaurants in your area. Presented in a beautiful binder you'll
+            treasure and build on for years.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/collections/all"
+            <button
+              type="button"
+              onClick={() => {
+                document.getElementById('postcode-search')?.scrollIntoView({behavior: 'smooth'});
+                setTimeout(() => document.querySelector('#postcode-search input[name="postcode"]')?.focus(), 600);
+              }}
               className="inline-flex items-center justify-center px-8 py-3 rounded-md bg-secondary text-secondary-foreground font-medium hover:bg-secondary/90 transition-colors"
             >
-              Get Your Binder
-            </Link>
+              Find Your Binder
+            </button>
             <Link
-              to="/recipes"
+              to="/collections/all"
               className="inline-flex items-center justify-center px-8 py-3 rounded-md border border-primary-foreground/40 text-primary-foreground font-medium hover:bg-primary-foreground/10 transition-colors"
             >
-              Browse Recipes
+              Our Full Collection
             </Link>
           </div>
         </div>
@@ -223,64 +260,60 @@ export default function Homepage() {
                 View All Products
               </Link>
             </div>
-          </div>
-        </section>
-      )}
 
-      {/* Regions */}
-      <section className="bg-muted py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-3">Available Regions</h2>
-            <p className="text-muted-foreground">
-              More cities launching soon — is yours next?
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {regions.map((region) => (
-              <Link
-                key={region.id}
-                to={`/regions/${region.id}`}
-                className="group"
-              >
-                <div className="bg-card rounded-lg border border-border hover:shadow-md transition-shadow cursor-pointer">
-                  <div className="h-2 bg-secondary rounded-t-lg" />
-                  <div className="pt-5 pb-6 px-5">
-                    <div className="flex items-start gap-3">
-                      <svg
-                        className="w-5 h-5 text-primary mt-0.5 shrink-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      <div>
-                        <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
-                          {region.name}
-                        </h3>
-                        <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
-                          {region.description}
-                        </p>
+            {/* Regions */}
+            <div className="mt-20 text-center mb-10">
+              <h2 className="text-3xl font-bold mb-3">Available Regions</h2>
+              <p className="text-muted-foreground">
+                More cities launching soon — is yours next?
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {regions.map((region) => (
+                <Link
+                  key={region.id}
+                  to={`/regions/${region.id}`}
+                  className="group"
+                >
+                  <div className="bg-card rounded-lg border border-border hover:shadow-md transition-shadow cursor-pointer">
+                    <div className="h-2 bg-secondary rounded-t-lg" />
+                    <div className="pt-5 pb-6 px-5">
+                      <div className="flex items-start gap-3">
+                        <svg
+                          className="w-5 h-5 text-primary mt-0.5 shrink-0"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                        <div>
+                          <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                            {region.name}
+                          </h3>
+                          <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
+                            {region.description}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Featured restaurants */}
       <section className="max-w-6xl mx-auto px-4 py-20">
@@ -468,7 +501,7 @@ function PostcodeSearch({products}) {
       : null;
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-20">
+    <section id="postcode-search" className="max-w-6xl mx-auto px-4 py-20">
       <div className="bg-card border border-border rounded-xl p-8 md:p-12 max-w-2xl mx-auto text-center">
         <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
           Find Your Area

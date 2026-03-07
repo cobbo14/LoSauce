@@ -8,7 +8,50 @@ import {ProductItem} from '~/components/ProductItem';
  * @type {Route.MetaFunction}
  */
 export const meta = ({data}) => {
-  return [{title: `Locally Sauced | ${data?.collection.title ?? ''}`}];
+  const collection = data?.collection;
+  if (!collection) {
+    return [{title: 'Collection — Locally Sauced'}];
+  }
+
+  const meta = [
+    {title: `Locally Sauced | ${collection.title}`},
+  ];
+
+  if (collection.description) {
+    meta.push({name: 'description', content: collection.description});
+  }
+
+  meta.push({
+    'script:ld+json': {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: collection.title,
+      description: collection.description || undefined,
+      url: `https://locallysauced.co.uk/collections/${collection.handle}`,
+    },
+  });
+
+  meta.push({
+    'script:ld+json': {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Shop',
+          item: 'https://locallysauced.co.uk/collections/all',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: collection.title,
+        },
+      ],
+    },
+  });
+
+  return meta;
 };
 
 /**

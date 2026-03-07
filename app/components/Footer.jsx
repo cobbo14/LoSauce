@@ -126,9 +126,104 @@ export function Footer({footer: footerPromise, header, publicStoreDomain}) {
 
         <hr className="my-8 border-primary-foreground/20" />
 
-        <p className="text-center text-xs text-primary-foreground/50">
-          &copy; {new Date().getFullYear()} Locally Sauced. All rights reserved.
-        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-primary-foreground/50">
+            &copy; {new Date().getFullYear()} Locally Sauced. All rights
+            reserved.
+          </p>
+          <div className="flex items-center gap-4">
+            <a
+              href="https://instagram.com/locallysaucedHQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Instagram"
+              className="text-primary-foreground/50 hover:text-secondary transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+              </svg>
+            </a>
+            <a
+              href="https://tiktok.com/@locallysauced"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on TikTok"
+              className="text-primary-foreground/50 hover:text-secondary transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+              </svg>
+            </a>
+            <a
+              href="https://facebook.com/locallysauced"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Facebook"
+              className="text-primary-foreground/50 hover:text-secondary transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+              </svg>
+            </a>
+            <a
+              href="https://x.com/locallysauced"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on X"
+              className="text-primary-foreground/50 hover:text-secondary transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 4l7.07 9.34L4 20h1.6l6.06-5.71L16.4 20H20l-7.4-9.76L19.5 4H18l-5.6 5.28L8 4H4z" />
+              </svg>
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   );

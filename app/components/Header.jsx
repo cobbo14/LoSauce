@@ -2,9 +2,10 @@ import {Suspense, useState} from 'react';
 import {Await, NavLink, useAsyncValue, useLocation} from 'react-router';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
-import logoImg from '~/assets/logo.png';
+import logoImg from '~/assets/hero-logo.png';
 
 const NAV_LINKS = [
+  {to: '/', label: 'Home'},
   {to: '/restaurants', label: 'Restaurants'},
   {to: '/recipes', label: 'Recipes'},
   {to: '/about', label: 'Our Story'},
@@ -35,7 +36,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-1">
           {NAV_LINKS.map((link) => {
-            const isActive = location.pathname === link.to || location.pathname.startsWith(link.to + '/');
+            const isActive = link.to === '/' ? location.pathname === '/' : location.pathname === link.to || location.pathname.startsWith(link.to + '/');
             const isShop = link.label === 'Shop';
             return (
               <NavLink
@@ -85,7 +86,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
         <div className="md:hidden border-t border-primary-foreground/20 bg-primary">
           <nav className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
             {NAV_LINKS.map((link) => {
-              const isActive = location.pathname === link.to || location.pathname.startsWith(link.to + '/');
+              const isActive = link.to === '/' ? location.pathname === '/' : location.pathname === link.to || location.pathname.startsWith(link.to + '/');
               return (
                 <NavLink
                   key={link.to}
