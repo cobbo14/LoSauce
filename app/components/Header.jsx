@@ -9,7 +9,7 @@ const NAV_LINKS = [
   {to: '/recipes', label: 'Recipes'},
   {to: '/about', label: 'Our Story'},
   {to: '/contact', label: 'Contact'},
-  {to: '/collections', label: 'Shop'},
+  {to: '/collections/all', label: 'Shop'},
 ];
 
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {

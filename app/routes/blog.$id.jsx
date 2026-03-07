@@ -90,7 +90,7 @@ export default function BlogPostPage() {
             Browse Recipes
           </Link>
           <Link
-            to="/collections"
+            to="/collections/all"
             className="inline-flex items-center justify-center px-6 py-2.5 rounded-md border border-border font-medium hover:bg-muted transition-colors"
           >
             Shop the Binder

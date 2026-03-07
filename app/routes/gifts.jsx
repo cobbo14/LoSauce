@@ -137,7 +137,7 @@ export default function GiftGuidePage() {
           just £14.99.
         </p>
         <Link
-          to="/collections"
+          to="/collections/all"
           className="inline-flex items-center justify-center px-6 py-2.5 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
         >
           Shop Now

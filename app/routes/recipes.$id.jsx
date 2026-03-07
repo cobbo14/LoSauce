@@ -241,7 +241,7 @@ export default function RecipeDetailPage() {
               View Restaurant
             </Link>
             <Link
-              to="/collections"
+              to="/collections/all"
               className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
             >
               Get the Binder

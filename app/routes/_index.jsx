@@ -1,8 +1,15 @@
-import {Link} from 'react-router';
+import {Link, useLoaderData, useFetcher, data as remixData} from 'react-router';
+import {Image, Money} from '@shopify/hydrogen';
+import {useVariantUrl} from '~/lib/variants';
 import {regions} from '~/data/regions';
 import {restaurants} from '~/data/restaurants';
 
 const featuredRestaurants = restaurants.filter((r) => r.featured).slice(0, 6);
+
+const BINDER_LOCATIONS = {
+  'surrey-binder': {lat: 51.3148, lng: -0.5600, area: 'Surrey'},
+  'berkshire-binder': {lat: 51.4543, lng: -0.9781, area: 'Berkshire'},
+};
 
 const testimonials = [
   {
@@ -70,7 +77,52 @@ export const meta = () => {
   ];
 };
 
+/**
+ * @param {Route.LoaderArgs} args
+ */
+export async function loader({context}) {
+  const {products} = await context.storefront.query(FEATURED_PRODUCTS_QUERY);
+  return {products: products.nodes};
+}
+
+/**
+ * @param {Route.ActionArgs} args
+ */
+export async function action({request}) {
+  const formData = await request.formData();
+  const postcode = String(formData.get('postcode') || '').trim().replace(/\s+/g, '');
+
+  if (!postcode) {
+    return remixData({error: 'Please enter a postcode.'}, {status: 400});
+  }
+
+  try {
+    const res = await fetch(
+      `https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`,
+    );
+    const json = await res.json();
+
+    if (json.status !== 200 || !json.result) {
+      return remixData(
+        {error: "We couldn't find that postcode. Please check and try again."},
+        {status: 400},
+      );
+    }
+
+    return remixData({
+      latitude: json.result.latitude,
+      longitude: json.result.longitude,
+    });
+  } catch {
+    return remixData(
+      {error: 'Something went wrong. Please try again.'},
+      {status: 500},
+    );
+  }
+}
+
 export default function Homepage() {
+  const {products} = useLoaderData();
   return (
     <div>
       {/* Hero */}
@@ -98,7 +150,7 @@ export default function Homepage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/collections"
+              to="/collections/all"
               className="inline-flex items-center justify-center px-8 py-3 rounded-md bg-secondary text-secondary-foreground font-medium hover:bg-secondary/90 transition-colors"
             >
               Get Your Binder
@@ -138,6 +190,42 @@ export default function Homepage() {
           ))}
         </div>
       </section>
+
+      {/* Find Your Area */}
+      <PostcodeSearch products={products} />
+
+      {/* Products */}
+      {products.length > 0 && (
+        <section className="bg-muted py-20">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
+                Shop
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-2 mb-3">
+                Our Products
+              </h2>
+              <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+                Everything you need to bring restaurant-quality cooking into your
+                home.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products.map((product) => (
+                <HomepageProductCard key={product.id} product={product} />
+              ))}
+            </div>
+            <div className="text-center mt-10">
+              <Link
+                to="/collections/all"
+                className="inline-flex items-center justify-center px-6 py-2.5 rounded-md border border-border text-sm font-medium hover:bg-card transition-colors"
+              >
+                View All Products
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Regions */}
       <section className="bg-muted py-16">
@@ -335,7 +423,7 @@ export default function Homepage() {
             cooking into your home.
           </p>
           <Link
-            to="/collections"
+            to="/collections/all"
             className="inline-flex items-center justify-center px-8 py-3 rounded-md bg-secondary text-secondary-foreground font-medium hover:bg-secondary/90 transition-colors"
           >
             Shop Now — from £14.99
@@ -345,3 +433,212 @@ export default function Homepage() {
     </div>
   );
 }
+
+function getDistanceKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function PostcodeSearch({products}) {
+  const fetcher = useFetcher();
+  const loading = fetcher.state !== 'idle';
+  const data = fetcher.data;
+
+  // Filter to binder products that have a location, then rank by distance
+  const ranked =
+    data?.latitude != null
+      ? products
+          .filter((p) => BINDER_LOCATIONS[p.handle])
+          .map((p) => {
+            const loc = BINDER_LOCATIONS[p.handle];
+            return {
+              ...p,
+              area: loc.area,
+              distance: getDistanceKm(data.latitude, data.longitude, loc.lat, loc.lng),
+            };
+          })
+          .sort((a, b) => a.distance - b.distance)
+      : null;
+
+  return (
+    <section className="max-w-6xl mx-auto px-4 py-20">
+      <div className="bg-card border border-border rounded-xl p-8 md:p-12 max-w-2xl mx-auto text-center">
+        <span className="text-sm font-semibold tracking-[0.2em] uppercase text-secondary">
+          Find Your Area
+        </span>
+        <h2 className="text-2xl md:text-3xl font-bold mt-3 mb-3">
+          Is there a binder near you?
+        </h2>
+        <p className="text-muted-foreground leading-relaxed mb-6">
+          Enter your postcode and we'll find the nearest Locally Sauced binder.
+        </p>
+        <fetcher.Form method="post" className="flex gap-3 max-w-sm mx-auto">
+          <input
+            type="text"
+            name="postcode"
+            placeholder="e.g. SW11 1AA"
+            className="flex-1 px-4 py-2.5 rounded-md border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-5 py-2.5 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {loading ? 'Searching...' : 'Search'}
+          </button>
+        </fetcher.Form>
+
+        {data?.error && (
+          <p className="text-red-500 text-sm mt-4">{data.error}</p>
+        )}
+
+        {ranked && ranked.length > 0 && (
+          <div className="mt-8 text-left">
+            <div className="bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-lg p-5 mb-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold tracking-[0.15em] uppercase text-secondary mb-1">
+                    Nearest binder
+                  </p>
+                  <h3 className="text-xl font-bold text-foreground">
+                    {ranked[0].title}
+                  </h3>
+                  {ranked[0].description && (
+                    <p className="text-muted-foreground text-sm mt-1 line-clamp-2">
+                      {ranked[0].description}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground mt-2">
+                    ~{Math.round(ranked[0].distance * 0.621)} miles away
+                  </p>
+                </div>
+                <Link
+                  to={`/products/${ranked[0].handle}`}
+                  className="shrink-0 inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+                >
+                  View Binder
+                </Link>
+              </div>
+            </div>
+
+            {ranked.length > 1 && (
+              <div>
+                <p className="text-xs font-semibold tracking-[0.15em] uppercase text-muted-foreground mb-3">
+                  Other binders
+                </p>
+                <div className="space-y-2">
+                  {ranked.slice(1).map((product) => (
+                    <Link
+                      key={product.id}
+                      to={`/products/${product.handle}`}
+                      className="flex items-center justify-between gap-3 p-3 rounded-lg border border-border hover:bg-muted transition-colors"
+                    >
+                      <div>
+                        <p className="font-medium text-sm">{product.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          ~{Math.round(product.distance * 0.621)} miles away
+                        </p>
+                      </div>
+                      <svg className="w-4 h-4 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {ranked && ranked.length === 0 && (
+          <div className="mt-8">
+            <p className="text-muted-foreground text-sm">
+              We don't have a binder for your area yet, but we're expanding!
+              Check out our{' '}
+              <Link to="/collections/all" className="text-primary hover:underline">
+                full range
+              </Link>.
+            </p>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function HomepageProductCard({product}) {
+  const variantUrl = useVariantUrl(product.handle);
+  const image = product.featuredImage;
+  return (
+    <Link
+      className="group block bg-card rounded-lg border border-border hover:shadow-md transition-shadow overflow-hidden"
+      to={variantUrl}
+      prefetch="intent"
+    >
+      <div className="h-2 bg-secondary rounded-t-lg" />
+      {image && (
+        <div className="overflow-hidden">
+          <Image
+            alt={image.altText || product.title}
+            aspectRatio="1/1"
+            data={image}
+            loading="eager"
+            sizes="(min-width: 45em) 400px, 100vw"
+            className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
+      )}
+      <div className="p-5">
+        <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+          {product.title}
+        </h3>
+        {product.description && (
+          <p className="text-muted-foreground text-sm leading-relaxed mt-2 line-clamp-2">
+            {product.description}
+          </p>
+        )}
+        <p className="text-secondary font-medium mt-3">
+          <Money data={product.priceRange.minVariantPrice} />
+        </p>
+      </div>
+    </Link>
+  );
+}
+
+const FEATURED_PRODUCTS_QUERY = `#graphql
+  query FeaturedProducts(
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    products(first: 6, sortKey: BEST_SELLING) {
+      nodes {
+        id
+        title
+        handle
+        description
+        featuredImage {
+          id
+          altText
+          url
+          width
+          height
+        }
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+      }
+    }
+  }
+`;
+
+/** @typedef {import('./+types/_index').Route} Route */

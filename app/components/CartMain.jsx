@@ -93,7 +93,7 @@ function CartEmpty({hidden = false}) {
         started!
       </p>
       <Link
-        to="/collections"
+        to="/collections/all"
         onClick={close}
         prefetch="viewport"
         className="inline-block px-6 py-2.5 rounded-md bg-secondary text-secondary-foreground font-medium hover:bg-secondary/90 transition-colors"

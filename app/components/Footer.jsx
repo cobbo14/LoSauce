@@ -48,7 +48,7 @@ export function Footer({footer: footerPromise, header, publicStoreDomain}) {
               </li>
               <li>
                 <NavLink
-                  to="/collections"
+                  to="/collections/all"
                   className="hover:text-secondary transition-colors"
                 >
                   Shop

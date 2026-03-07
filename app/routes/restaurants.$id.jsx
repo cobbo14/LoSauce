@@ -209,7 +209,7 @@ export default function RestaurantDetailPage() {
                 Buy the {region?.name} binder to unlock this exclusive discount.
               </p>
               <Link
-                to="/collections"
+                to="/collections/all"
                 className="inline-flex items-center justify-center px-5 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
               >
                 Get the Binder
