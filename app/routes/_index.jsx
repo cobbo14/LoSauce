@@ -3,7 +3,7 @@ import {Image, Money} from '@shopify/hydrogen';
 import {useVariantUrl} from '~/lib/variants';
 import {regions} from '~/data/regions';
 import {restaurants} from '~/data/restaurants';
-import heroLogoImg from '~/assets/hero-logo.png';
+import heroLogoImg from '~/assets/hero-logo.webp';
 
 const featuredRestaurants = restaurants.filter((r) => r.featured).slice(0, 6);
 

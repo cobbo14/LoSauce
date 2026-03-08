@@ -2,7 +2,7 @@ import {Suspense, useState} from 'react';
 import {Await, NavLink, useAsyncValue, useLocation} from 'react-router';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
-import logoImg from '~/assets/hero-logo.png';
+import logoImg from '~/assets/hero-logo.webp';
 
 const NAV_LINKS = [
   {to: '/', label: 'Home'},
