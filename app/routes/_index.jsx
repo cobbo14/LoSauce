@@ -80,11 +80,11 @@ export const meta = () => {
         '@context': 'https://schema.org',
         '@type': 'Organization',
         name: 'Locally Sauced',
-        url: 'https://locallysauced.co.uk',
-        logo: 'https://locallysauced.co.uk/hero-logo.png',
+        url: 'https://locallysauced.uk',
+        logo: 'https://locallysauced.uk/hero-logo.png',
         description:
           'Locally Sauced collects exclusive recipes from the best independent restaurants in your city — presented in a beautiful binder.',
-        email: 'hello@locallysauced.co.uk',
+        email: 'hello@locallysauced.uk',
         sameAs: [
           'https://instagram.com/locallysaucedHQ',
           'https://tiktok.com/@locallysauced',
@@ -98,10 +98,10 @@ export const meta = () => {
         '@context': 'https://schema.org',
         '@type': 'WebSite',
         name: 'Locally Sauced',
-        url: 'https://locallysauced.co.uk',
+        url: 'https://locallysauced.uk',
         potentialAction: {
           '@type': 'SearchAction',
-          target: 'https://locallysauced.co.uk/search?q={search_term_string}',
+          target: 'https://locallysauced.uk/search?q={search_term_string}',
           'query-input': 'required name=search_term_string',
         },
       },
@@ -209,8 +209,7 @@ export default function Homepage() {
             How It Works
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            A cookbook with soul — built from the kitchens of restaurants you
-            already love.
+            A cookbook forged from the fires of the kitchens you already love.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -436,7 +435,7 @@ export default function Homepage() {
           <div className="klaviyo-form-PLACEHOLDER"></div>
           <noscript>
             <a
-              href="mailto:hello@locallysauced.co.uk?subject=Newsletter Signup&body=Hi! I'd like to join the Locally Sauced mailing list. Please add me!"
+              href="mailto:hello@locallysauced.uk?subject=Newsletter Signup&body=Hi! I'd like to join the Locally Sauced mailing list. Please add me!"
               className="inline-flex items-center justify-center px-6 py-2.5 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
             >
               Join the Mailing List

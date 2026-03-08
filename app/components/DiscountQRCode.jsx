@@ -13,7 +13,7 @@ export function DiscountQRCode({code, size = 200, className = ''}) {
   useEffect(() => {
     if (!canvasRef.current || !code) return;
 
-    const url = `https://locallysauced.co.uk/verify/${encodeURIComponent(code)}`;
+    const url = `https://locallysauced.uk/verify/${encodeURIComponent(code)}`;
 
     QRCode.toCanvas(canvasRef.current, url, {
       width: size,

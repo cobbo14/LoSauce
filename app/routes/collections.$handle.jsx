@@ -27,7 +27,7 @@ export const meta = ({data}) => {
       '@type': 'CollectionPage',
       name: collection.title,
       description: collection.description || undefined,
-      url: `https://locallysauced.co.uk/collections/${collection.handle}`,
+      url: `https://locallysauced.uk/collections/${collection.handle}`,
     },
   });
 
@@ -40,7 +40,7 @@ export const meta = ({data}) => {
           '@type': 'ListItem',
           position: 1,
           name: 'Shop',
-          item: 'https://locallysauced.co.uk/collections/all',
+          item: 'https://locallysauced.uk/collections/all',
         },
         {
           '@type': 'ListItem',

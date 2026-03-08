@@ -31,7 +31,7 @@ export const meta = ({params}) => {
     publisher: {
       '@type': 'Organization',
       name: 'Locally Sauced',
-      url: 'https://locallysauced.co.uk',
+      url: 'https://locallysauced.uk',
     },
     prepTime: `PT${recipe.prepTime}M`,
     cookTime: `PT${recipe.cookTime}M`,
@@ -63,7 +63,7 @@ export const meta = ({params}) => {
           '@type': 'ListItem',
           position: 1,
           name: 'Recipes',
-          item: 'https://locallysauced.co.uk/recipes',
+          item: 'https://locallysauced.uk/recipes',
         },
         {
           '@type': 'ListItem',

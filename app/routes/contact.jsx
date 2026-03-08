@@ -9,8 +9,8 @@ const enquiries = [
     ),
     title: 'General Enquiries',
     description: 'Questions about our binders, recipes, or anything else — we\'re happy to help.',
-    href: 'mailto:hello@locallysauced.co.uk?subject=General Enquiry',
-    label: 'hello@locallysauced.co.uk',
+    href: 'mailto:hello@locallysauced.uk?subject=General Enquiry',
+    label: 'hello@locallysauced.uk',
   },
   {
     icon: (
@@ -32,8 +32,8 @@ const enquiries = [
     ),
     title: 'Press & Media',
     description: 'For press enquiries, interviews, or media coverage, please get in touch.',
-    href: 'mailto:hello@locallysauced.co.uk?subject=Press Enquiry',
-    label: 'hello@locallysauced.co.uk',
+    href: 'mailto:hello@locallysauced.uk?subject=Press Enquiry',
+    label: 'hello@locallysauced.uk',
   },
 ];
 
@@ -104,10 +104,10 @@ export default function ContactPage() {
           You can always reach us directly. We aim to respond within 48 hours.
         </p>
         <a
-          href="mailto:hello@locallysauced.co.uk"
+          href="mailto:hello@locallysauced.uk"
           className="inline-flex items-center justify-center px-6 py-2.5 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
         >
-          hello@locallysauced.co.uk
+          hello@locallysauced.uk
         </a>
       </div>
     </div>

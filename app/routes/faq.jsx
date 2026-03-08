@@ -65,12 +65,12 @@ const faqs = [
       {
         question: 'Can I suggest a restaurant to feature?',
         answer:
-          'We\'d love that! Drop us an email at hello@locallysauced.co.uk with the restaurant name, location, and why you think they\'d be a great fit.',
+          'We\'d love that! Drop us an email at hello@locallysauced.uk with the restaurant name, location, and why you think they\'d be a great fit.',
       },
       {
         question: 'I\'m a restaurant owner. How do I get featured?',
         answer:
-          'Head to our Partner page to learn more about what a partnership looks like, or email us directly at hello@locallysauced.co.uk.',
+          'Head to our Partner page to learn more about what a partnership looks like, or email us directly at hello@locallysauced.uk.',
       },
     ],
   },
@@ -102,7 +102,7 @@ export default function FAQPage() {
           Everything you need to know about Locally Sauced. Can't find what
           you're looking for?{' '}
           <a
-            href="mailto:hello@locallysauced.co.uk"
+            href="mailto:hello@locallysauced.uk"
             className="text-secondary hover:underline"
           >
             Get in touch
@@ -138,10 +138,10 @@ export default function FAQPage() {
           as soon as we can.
         </p>
         <a
-          href="mailto:hello@locallysauced.co.uk"
+          href="mailto:hello@locallysauced.uk"
           className="inline-flex items-center justify-center px-6 py-2.5 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
         >
-          hello@locallysauced.co.uk
+          hello@locallysauced.uk
         </a>
       </div>
     </div>

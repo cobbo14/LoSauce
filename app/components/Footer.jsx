@@ -115,10 +115,10 @@ export function Footer({footer: footerPromise, header, publicStoreDomain}) {
                 Partner with us &rarr;
               </NavLink>
               <a
-                href="mailto:hello@locallysauced.co.uk"
+                href="mailto:hello@locallysauced.uk"
                 className="text-sm text-primary-foreground/70 hover:text-secondary transition-colors"
               >
-                hello@locallysauced.co.uk
+                hello@locallysauced.uk
               </a>
             </div>
           </div>

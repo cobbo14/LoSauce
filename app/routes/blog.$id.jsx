@@ -18,16 +18,16 @@ export const meta = ({params}) => {
         author: {
           '@type': 'Organization',
           name: 'Locally Sauced',
-          url: 'https://locallysauced.co.uk',
+          url: 'https://locallysauced.uk',
         },
         publisher: {
           '@type': 'Organization',
           name: 'Locally Sauced',
-          url: 'https://locallysauced.co.uk',
+          url: 'https://locallysauced.uk',
         },
         mainEntityOfPage: {
           '@type': 'WebPage',
-          '@id': `https://locallysauced.co.uk/blog/${post.id}`,
+          '@id': `https://locallysauced.uk/blog/${post.id}`,
         },
       },
     },
@@ -40,7 +40,7 @@ export const meta = ({params}) => {
             '@type': 'ListItem',
             position: 1,
             name: 'Blog',
-            item: 'https://locallysauced.co.uk/blog',
+            item: 'https://locallysauced.uk/blog',
           },
           {
             '@type': 'ListItem',

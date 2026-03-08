@@ -42,7 +42,7 @@ export const meta = ({data}) => {
     '@type': 'Product',
     name: product.title,
     description: product.description,
-    url: `https://locallysauced.co.uk/products/${product.handle}`,
+    url: `https://locallysauced.uk/products/${product.handle}`,
     brand: {
       '@type': 'Brand',
       name: 'Locally Sauced',
@@ -60,7 +60,7 @@ export const meta = ({data}) => {
   if (variant?.price) {
     jsonLd.offers = {
       '@type': 'Offer',
-      url: `https://locallysauced.co.uk/products/${product.handle}`,
+      url: `https://locallysauced.uk/products/${product.handle}`,
       priceCurrency: variant.price.currencyCode,
       price: variant.price.amount,
       availability: variant.availableForSale
@@ -84,7 +84,7 @@ export const meta = ({data}) => {
           '@type': 'ListItem',
           position: 1,
           name: 'Shop',
-          item: 'https://locallysauced.co.uk/collections/all',
+          item: 'https://locallysauced.uk/collections/all',
         },
         {
           '@type': 'ListItem',

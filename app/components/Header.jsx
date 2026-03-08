@@ -60,8 +60,21 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
           <CartToggle cart={cart} />
         </nav>
 
-        {/* Mobile menu button + cart */}
-        <div className="flex md:hidden items-center gap-2">
+        {/* Mobile menu button + shop + cart */}
+        <div className="flex md:hidden items-center gap-1">
+          <NavLink
+            to="/collections/all"
+            prefetch="intent"
+            onClick={() => setOpen(false)}
+            className={[
+              'px-3 py-1.5 rounded-md text-sm font-medium tracking-wide transition-colors',
+              location.pathname.startsWith('/collections')
+                ? 'bg-secondary text-secondary-foreground'
+                : 'text-primary-foreground hover:bg-primary-foreground/10',
+            ].join(' ')}
+          >
+            Shop
+          </NavLink>
           <CartToggle cart={cart} />
           <button
             className="p-2 rounded-md hover:bg-primary-foreground/10"
