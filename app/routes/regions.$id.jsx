@@ -3,6 +3,12 @@ import {regions} from '~/data/regions';
 import {restaurants} from '~/data/restaurants';
 import {recipes} from '~/data/recipes';
 
+export function headers() {
+  return {
+    'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
+  };
+}
+
 export const meta = ({params}) => {
   const region = regions.find((r) => r.id === params.id);
   if (!region) return [{title: 'Region Not Found — Locally Sauced'}];

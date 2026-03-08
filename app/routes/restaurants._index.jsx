@@ -5,6 +5,12 @@ import {regions} from '~/data/regions';
 import {recipes} from '~/data/recipes';
 import {getActiveOffers} from '~/lib/discounts.server';
 
+export function headers() {
+  return {
+    'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
+  };
+}
+
 export const meta = () => {
   return [
     {title: 'Our Restaurants — Locally Sauced'},

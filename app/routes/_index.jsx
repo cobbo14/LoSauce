@@ -109,11 +109,17 @@ export const meta = () => {
   ];
 };
 
+export function headers({loaderHeaders}) {
+  return loaderHeaders;
+}
+
 /**
  * @param {Route.LoaderArgs} args
  */
 export async function loader({context}) {
-  const {products} = await context.storefront.query(FEATURED_PRODUCTS_QUERY);
+  const {products} = await context.storefront.query(FEATURED_PRODUCTS_QUERY, {
+    cache: context.storefront.CacheLong(),
+  });
   return {products: products.nodes};
 }
 

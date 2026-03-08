@@ -9,6 +9,12 @@ const ALL_DIETARY = Array.from(
   new Set(recipes.flatMap((r) => r.dietary)),
 ).sort();
 
+export function headers() {
+  return {
+    'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
+  };
+}
+
 export const meta = () => {
   return [
     {title: 'All Recipes — Locally Sauced'},

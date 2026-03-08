@@ -3,6 +3,12 @@ import {recipes} from '~/data/recipes';
 import {restaurants} from '~/data/restaurants';
 import {regions} from '~/data/regions';
 
+export function headers() {
+  return {
+    'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
+  };
+}
+
 export const meta = ({params}) => {
   const recipe = recipes.find((r) => r.id === params.id);
   if (!recipe) {

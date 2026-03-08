@@ -12,6 +12,10 @@ import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
+export function headers({loaderHeaders}) {
+  return loaderHeaders;
+}
+
 /**
  * @type {Route.MetaFunction}
  */
@@ -127,6 +131,7 @@ async function loadCriticalData({context, params, request}) {
   const [{product}] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
       variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+      cache: storefront.CacheShort(),
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);

@@ -1,4 +1,5 @@
 import {Link, useNavigate} from 'react-router';
+import {Image} from '@shopify/hydrogen';
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
 
@@ -122,7 +123,7 @@ function ProductOptionSwatch({swatch, name}) {
         backgroundColor: color || 'transparent',
       }}
     >
-      {!!image && <img src={image} alt={name} />}
+      {!!image && <Image src={image} alt={name} width={20} height={20} className="w-full h-full object-cover" />}
     </div>
   );
 }

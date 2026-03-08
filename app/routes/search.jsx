@@ -4,6 +4,10 @@ import {SearchForm} from '~/components/SearchForm';
 import {SearchResults} from '~/components/SearchResults';
 import {getEmptyPredictiveSearchResult} from '~/lib/search';
 
+export function headers({loaderHeaders}) {
+  return loaderHeaders;
+}
+
 /**
  * @type {Route.MetaFunction}
  */
@@ -17,13 +21,17 @@ export const meta = () => {
 export async function loader({request, context}) {
   const url = new URL(request.url);
   const isPredictive = url.searchParams.has('predictive');
-  const searchPromise = isPredictive
+  const searchPromise = (isPredictive
     ? predictiveSearch({request, context})
-    : regularSearch({request, context});
-
-  searchPromise.catch((error) => {
+    : regularSearch({request, context})
+  ).catch((error) => {
     console.error(error);
-    return {term: '', result: null, error: error.message};
+    return {
+      type: isPredictive ? 'predictive' : 'regular',
+      term: '',
+      result: null,
+      error: error.message,
+    };
   });
 
   return await searchPromise;
@@ -242,6 +250,7 @@ async function regularSearch({request, context}) {
   // Search articles, pages, and products for the `q` term
   const {errors, ...items} = await storefront.query(SEARCH_QUERY, {
     variables: {...variables, term},
+    cache: storefront.CacheShort(),
   });
 
   if (!items) {
@@ -407,11 +416,11 @@ async function predictiveSearch({request, context}) {
     PREDICTIVE_SEARCH_QUERY,
     {
       variables: {
-        // customize search options as needed
         limit,
         limitScope: 'EACH',
         term,
       },
+      cache: storefront.CacheShort(),
     },
   );
 

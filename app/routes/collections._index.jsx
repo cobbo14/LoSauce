@@ -2,6 +2,10 @@ import {useLoaderData, Link} from 'react-router';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 
+export function headers({loaderHeaders}) {
+  return loaderHeaders;
+}
+
 /**
  * @param {Route.LoaderArgs} args
  */
@@ -28,6 +32,7 @@ async function loadCriticalData({context, request}) {
   const [{collections}] = await Promise.all([
     context.storefront.query(COLLECTIONS_QUERY, {
       variables: paginationVariables,
+      cache: context.storefront.CacheLong(),
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);

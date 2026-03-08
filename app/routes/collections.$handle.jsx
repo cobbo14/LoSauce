@@ -4,6 +4,10 @@ import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
 
+export function headers({loaderHeaders}) {
+  return loaderHeaders;
+}
+
 /**
  * @type {Route.MetaFunction}
  */
@@ -86,7 +90,7 @@ async function loadCriticalData({context, params, request}) {
   const [{collection}] = await Promise.all([
     storefront.query(COLLECTION_QUERY, {
       variables: {handle, ...paginationVariables},
-      // Add other queries here, so that they are loaded in parallel
+      cache: storefront.CacheShort(),
     }),
   ]);
 

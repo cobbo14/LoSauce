@@ -6,6 +6,12 @@ import {getActiveOffers} from '~/lib/discounts.server';
 import {DiscountQRCode} from '~/components/DiscountQRCode';
 import {CUSTOMER_EMAIL_QUERY} from '~/graphql/customer-account/CustomerEmailQuery';
 
+export function headers() {
+  return {
+    'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
+  };
+}
+
 export const meta = ({params}) => {
   const restaurant = restaurants.find((r) => r.id === params.id);
   return [

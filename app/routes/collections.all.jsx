@@ -3,6 +3,10 @@ import {getPaginationVariables} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
 
+export function headers({loaderHeaders}) {
+  return loaderHeaders;
+}
+
 /**
  * @type {Route.MetaFunction}
  */
@@ -37,6 +41,7 @@ async function loadCriticalData({context, request}) {
   const [{products}] = await Promise.all([
     storefront.query(CATALOG_QUERY, {
       variables: {...paginationVariables},
+      cache: storefront.CacheShort(),
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);
