@@ -67,7 +67,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
             prefetch="intent"
             onClick={() => setOpen(false)}
             className={[
-              'px-3 py-1.5 rounded-md text-sm font-medium tracking-wide transition-colors',
+              'px-3 py-1.5 rounded-md text-sm font-bold tracking-wide transition-colors',
               location.pathname.startsWith('/collections')
                 ? 'bg-secondary text-secondary-foreground'
                 : 'text-primary-foreground hover:bg-primary-foreground/10',
@@ -107,7 +107,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
                   onClick={() => setOpen(false)}
                   prefetch="intent"
                   className={[
-                    'px-4 py-3 rounded-md text-sm font-medium tracking-wide transition-colors',
+                    'px-4 py-3 rounded-md text-sm font-bold tracking-wide transition-colors',
                     isActive
                       ? 'bg-secondary text-secondary-foreground'
                       : 'text-primary-foreground hover:bg-primary-foreground/10',
@@ -166,7 +166,7 @@ function CartBadge({count}) {
           url: window.location.href || '',
         });
       }}
-      className="px-3 py-1.5 rounded-md text-sm font-medium text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
+      className="px-3 py-1.5 rounded-md text-sm font-bold text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
     >
       Cart{count > 0 ? ` (${count})` : ''}
     </a>
